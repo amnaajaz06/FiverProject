@@ -20,7 +20,6 @@ class PassportController extends Controller
             'lastname' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'phoneno' => 'required|min:10',
-            'image' => 'required',
             'password' => 'required|min:6',
         ]);
  
@@ -29,14 +28,19 @@ class PassportController extends Controller
             'lastname' => $request->lastname,
             'email' => $request->email,
             'phoneno' => $request->phoneno,
-            if ($request->hasFile('image')) {
-    			'image' = $request->file('image');
-			}
-            'password' => bcrypt($request->password)
+    		'image' => $request->file('image'),
+			'password' => bcrypt($request->password)
         ]);
- 
-        $token = $user->createToken('TutsForWeb')->accessToken;
- 
+ 		if(!$request->hasFile('image')) {
+        return response()->json(['upload_file_not_found'], 400);
+    	}
+    	$file = $request->file('image');
+    	if(!$file->isValid()) {
+        return response()->json(['invalid_file_upload'], 400);
+    	}
+    	$path = public_path() . '/uploads/';
+    	$file->move($path, $file->getClientOriginalName());
+    	return response()->json(compact('path'));
         return response()->json(['token' => $token], 200);
     }
  
