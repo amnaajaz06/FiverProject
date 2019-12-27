@@ -36,8 +36,9 @@ class PassportController extends Controller
     		'image' => $image,
 			'password' => bcrypt($request->password)
         ]);
- 		$success['token'] =  $user->createToken('MyApp')->accessToken;
-        return response()->json(['success'=>$success], $this->successStatus);
+ 		 $token = $user->createToken('TutsForWeb')->accessToken;
+ 
+        return response()->json(['token' => $token], 200);
     }
  
     /**
@@ -54,8 +55,8 @@ class PassportController extends Controller
         ];
  
         if (auth()->attempt($credentials)) {
-            $success['token'] =  $user->createToken('MyApp')->accessToken;
-        	return response()->json(['success'=>$success], $this->successStatus);
+            $token = auth()->user()->createToken('TutsForWeb')->accessToken;
+            return response()->json(['token' => $token], 200);
         } else {
             return response()->json(['error' => 'UnAuthorised'], 401);
         }
