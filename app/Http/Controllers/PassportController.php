@@ -14,7 +14,8 @@ class PassportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
-    {
+    {	 
+    	
         $this->validate($request, [
             'firstname' => 'required|min:3',
             'lastname' => 'required|min:3',
@@ -22,26 +23,21 @@ class PassportController extends Controller
             'phoneno' => 'required|min:10',
             'password' => 'required|min:6',
         ]);
- 
+ 		if ($file = $request->file('image')) {
+ 			$name = $file->getClientOriginalName();
+ 			$file->move('img',$name);
+ 			$image=$name;
+ 		}
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'email' => $request->email,
             'phoneno' => $request->phoneno,
-    		'image' => $request->file('image'),
+    		'image' => $image,
 			'password' => bcrypt($request->password)
         ]);
- 		if(!$request->hasFile('image')) {
-        return response()->json(['upload_file_not_found'], 400);
-    	}
-    	$file = $request->file('image');
-    	if(!$file->isValid()) {
-        return response()->json(['invalid_file_upload'], 400);
-    	}
-    	$path = public_path() . '/uploads/';
-    	$file->move($path, $file->getClientOriginalName());
-    	return response()->json(compact('path'));
-        return response()->json(['token' => $token], 200);
+ 		$success['token'] =  $user->createToken('MyApp')->accessToken;
+        return response()->json(['success'=>$success], $this->successStatus);
     }
  
     /**
@@ -58,8 +54,8 @@ class PassportController extends Controller
         ];
  
         if (auth()->attempt($credentials)) {
-            $token = auth()->user()->createToken('TutsForWeb')->accessToken;
-            return response()->json(['token' => $token], 200);
+            $success['token'] =  $user->createToken('MyApp')->accessToken;
+        	return response()->json(['success'=>$success], $this->successStatus);
         } else {
             return response()->json(['error' => 'UnAuthorised'], 401);
         }
