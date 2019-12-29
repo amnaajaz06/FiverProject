@@ -1,10 +1,10 @@
 <?php
- 
+
 namespace App\Http\Controllers;
- 
+
 use App\User;
 use Illuminate\Http\Request;
- 
+
 class PassportController extends Controller
 {
     /**
@@ -14,8 +14,8 @@ class PassportController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
-    {	 
-    	
+    {
+
         $this->validate($request, [
             'firstname' => 'required|min:3',
             'lastname' => 'required|min:3',
@@ -23,17 +23,13 @@ class PassportController extends Controller
             'phoneno' => 'required|min:10',
             'password' => 'required|min:6',
         ]);
- 		if ($file = $request->file('image')) {
- 			$name = $file->getClientOriginalName();
- 			$file->move('img',$name);
- 			$image=$name;
- 		}
+
         $user = User::create([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'email' => $request->email,
             'phoneno' => $request->phoneno,
-    		'image' => $image,
+    		'image' => "abc",
 			'password' => bcrypt($request->password)
         ]);
  		$token = $user->createToken('TutsForWeb')->accessToken;
@@ -41,7 +37,7 @@ class PassportController extends Controller
         /*$success['token'] =  $user->createToken('MyApp')->accessToken;
         return response()->json(['success'=>$success], $this->successStatus);*/
     }
- 
+
     /**
      * Handles Login Request
      *
@@ -54,7 +50,7 @@ class PassportController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ];
- 
+
         if (auth()->attempt($credentials)) {
             $token = auth()->user()->createToken('TutsForWeb')->accessToken;
             return response()->json(['token' => $token], 200);
@@ -64,7 +60,7 @@ class PassportController extends Controller
             return response()->json(['error' => 'UnAuthorised'], 401);
         }
     }
- 
+
     /**
      * Returns Authenticated User Details
      *

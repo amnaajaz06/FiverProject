@@ -41,17 +41,18 @@ class SellerController extends Controller
             'seller_experiance' => 'required',
             'seller_description' => 'required',
             'seller_NIC' => 'required|integer',
-            'skill_name' =>'required|array'
+            'skillname' =>'required|array'
         ]);
          $seller = $user->sellers()->create([
             'seller_experiance' => $request->seller_experiance,
             'seller_description' => $request->seller_description,
             'seller_NIC' => $request->seller_NIC,
         ]);
-        $skill_name = $request->skill_name;
-        for($x=0; $x< count($skill_name); $x++)
+
+        $skillname = $request->skillname;
+        for($x=0; $x< count($skillname); $x++)
         {
-        	$skill_name = $seller->skills()->create(['skill_name' => $skill_name[$x] , ]);
+        	$skill_name = $seller->skills()->create(['skill_name' => $skillname[$x] , ]);
         }
         /*$award_name = $request->award_name;
         for($x=0; $x< count($award_name); $x++)
