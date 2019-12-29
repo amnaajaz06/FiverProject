@@ -43,13 +43,7 @@ class SellerController extends Controller
             'seller_NIC' => 'required|integer',
             'skill_name' =>'required|array'
         ]);
- 
-        /*$seller = new Seller();
-        $seller->seller_experiance = $request->seller_experiance;
-        $seller->seller_description = $request->seller_description;
-        $seller->seller_NIC = $request->seller_NIC;
- */		//$user = new User();
-        $seller = $user->sellers()->create([
+         $seller = $user->sellers()->create([
             'seller_experiance' => $request->seller_experiance,
             'seller_description' => $request->seller_description,
             'seller_NIC' => $request->seller_NIC,
