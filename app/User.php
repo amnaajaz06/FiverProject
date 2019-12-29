@@ -10,6 +10,10 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+        public function sellers()
+    {
+        return $this->hasMany(Seller::class);
+    }
     /**
      * The attributes that are mass assignable.
      *
