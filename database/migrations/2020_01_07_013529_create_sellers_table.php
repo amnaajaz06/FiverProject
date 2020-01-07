@@ -15,9 +15,16 @@ class CreateSellersTable extends Migration
     {
         Schema::create('sellers', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('seller_experiance');
+            $table->string('profile_picture');
+            $table->string('location');
             $table->string('seller_description');
-            $table->string('seller_NIC');
+            $table->string('street_address');
+            $table->string('unit_number');
+            $table->string('city');
+            $table->string('state');
+            $table->integer('zip_code');
+            $table->date('birthdate');
+            $table->string('about_us');
             $table->timestamps();
  
             $table->integer('user_id')->unsigned()->index();

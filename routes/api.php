@@ -21,5 +21,7 @@ Route::post('login', 'PassportController@login');
  
 Route::middleware('auth:api')->group(function () {
     Route::get('user', 'PassportController@details');
-    Route::resource('sellers', 'SellerController');
+    Route::post('/seller/register', 'SellerController@store');
+    Route::get('/seller/{id}','SellerController@getseller');
+    Route::get('/showseller','SellerController@show');
 });

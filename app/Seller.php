@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Award;
 class Seller extends Model
 {
-     protected $fillable = ['seller_experiance', 'seller_description', 'seller_NIC' ];
+     protected $fillable = ['profile_picture','location', 'seller_description', 'street_address','unit_number','city','state','zip_code','birthdate','about_us' ];
      public function skills()
 	    {
 	        return $this->hasMany(Skill::class);

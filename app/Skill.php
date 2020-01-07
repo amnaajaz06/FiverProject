@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Skill extends Model
 {
-    protected $fillable = ['skill_name'];
+    protected $fillable = ['description','rate','level_of_experience','category','seller_id'];
+    public function skillimages()
+	    {
+	        return $this->hasMany(SkillImage::class);
+	    }
 }

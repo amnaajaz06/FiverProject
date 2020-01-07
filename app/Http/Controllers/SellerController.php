@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 use App\User;
 use App\Seller;
+use App\Skill;
 use Illuminate\Http\Request;
- 
+use Illuminate\Support\Facades\URL;
+use Auth; 
+Use DB;
 class SellerController extends Controller
 {
     public function index()
@@ -17,7 +20,7 @@ class SellerController extends Controller
         ]);
     }
  
-    public function show($id)
+    public function getseller($id)
     {
         $seller = auth()->user()->sellers()->find($id);
  
@@ -33,41 +36,89 @@ class SellerController extends Controller
             'data' => $seller->toArray()
         ], 400);
     }
- 
+    
+     public function show(Request $request)
+    {
+        $user = $request->user();
+        $user_id = $user->id;
+        $seller_find =DB::table('sellers')->where('user_id', '=', $user_id)->get();
+        return response()->json(['sellers' => $seller_find], 200);
+    }
+
     public function store(Request $request)
     {
-    	$user = $request->user();
+        $user = $request->user();
+        $user_id = $user->id;
+        $seller_id =DB::table('sellers')->where('id', '=', $user_id)->get();
         $this->validate($request, [
-            'seller_experiance' => 'required',
-            'seller_description' => 'required',
-            'seller_NIC' => 'required|integer',
-            'skill_name' =>'required|array'
+            /*'profile_picture' => 'required|mimes:jpg,jpeg,png',
+            'location' => 'required',
+            'seller_description' => 'required|min:8',
+            'street_address' => 'required',
+            'unit_number' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'zip_code' => 'required|integer',
+            'birthdate' => 'required|date',
+            'about_us' => 'required',*/
+            'skill' =>'required'
+            /*'description' =>'required',
+            'rate' => 'required|integer',
+            'level_of_experience' => 'required|integer',
+            'category' =>'required'*/
         ]);
-         $seller = $user->sellers()->create([
-            'seller_experiance' => $request->seller_experiance,
-            'seller_description' => $request->seller_description,
-            'seller_NIC' => $request->seller_NIC,
-        ]);
-        $skill_name = $request->skill_name;
-        for($x=0; $x< count($skill_name); $x++)
+       /* if($file = $request->file('profile_picture'))
         {
-        	$skill_name = $seller->skills()->create(['skill_name' => $skill_name[$x] , ]);
+           $name = $file->getClientOriginalName();
+           $file->move('img/sellers',$name);
+           $image = URL::asset('img/sellers/').'/'.$name;
         }
-        /*$award_name = $request->award_name;
-        for($x=0; $x< count($award_name); $x++)
+        $seller = $user->sellers()->create([
+            'profile_picture' => $image,
+            'location' => $request->location,
+            'seller_description' => $request->seller_description,
+            'street_address' => $request->street_address,
+            'unit_number' => $request->unit_number,
+            'city' => $request->city,
+            'state' => $request->state,
+            'zip_code' => $request->zip_code,
+            'birthdate' => $request->birthdate,
+            'about_us' => $request->about_us,
+        ]);*/
+
+        
+        /*$skill = Skill::create([
+            'description' => $request->description,
+            'rate' => $request->rate,
+            'level_of_experience' => $request->level_of_experience,
+            'category' =>$request->category,
+            'seller_id' =>$seller_id,
+            
+        ]);
+          $skill->save();*/
+          $skill = $request->skill[0]->rate;
+         
+        return response()->json(['skill' => $skill], 200);
+
+       /* $skillname = $request->skill_name;
+        for($x=0; $x< count($skillname); $x++)
         {
-        	$award_name= $seller->awards()->create(['award_name' => $award_name[$x] , ]);
+            $skill_name = $seller->skills()->create(['skill_name' => $skillname[$x] , ]);
+        }
+        $awardname = $request->award_name;
+        for($x=0; $x< count($awardname); $x++)
+        {
+            $award_name= $seller->awards()->create(['award_name' => $awardname[$x] , ]);
         }*/
-        if (auth()->user()->sellers()->save($seller))
+      /*  if (auth()->user()->sellers()->save($seller))
             return response()->json([
                 'success' => true,
-                'data' => $seller->toArray()
-            ]);
+                'data' => $seller->toArray()]);
         else
             return response()->json([
                 'success' => false,
                 'message' => 'Seller Record could not be added'
-            ], 500);
+            ], 500);*/
     }
  
     public function update(Request $request, $id)
