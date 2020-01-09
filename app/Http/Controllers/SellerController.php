@@ -47,11 +47,9 @@ class SellerController extends Controller
 
     public function store(Request $request)
     {
-        $user = $request->user();
-        $user_id = $user->id;
-        $seller_id =DB::table('sellers')->where('id', '=', $user_id)->get();
-        $this->validate($request, [
-            /*'profile_picture' => 'required|mimes:jpg,jpeg,png',
+         $user = $request->user();
+        /*$this->validate($request, [
+            //'profile_picture' => 'required|mimes:jpg,jpeg,png',
             'location' => 'required',
             'seller_description' => 'required|min:8',
             'street_address' => 'required',
@@ -60,50 +58,60 @@ class SellerController extends Controller
             'state' => 'required',
             'zip_code' => 'required|integer',
             'birthdate' => 'required|date',
-            'about_us' => 'required',*/
-            'skill' =>'required'
-            /*'description' =>'required',
+            'about_us' => 'required',
+            'skill' =>'required',
+            'description' =>'required',
             'rate' => 'required|integer',
             'level_of_experience' => 'required|integer',
-            'category' =>'required'*/
-        ]);
-       /* if($file = $request->file('profile_picture'))
+            'category' =>'required',
+            'seller_experiance' => 'required',
+            'seller_description' => 'required',
+            'seller_NIC' => 'required|integer',
+            'skillname' =>'required|array'
+        ]);*/
+        /*if($file = $request->file('profile_picture'))
         {
            $name = $file->getClientOriginalName();
            $file->move('img/sellers',$name);
            $image = URL::asset('img/sellers/').'/'.$name;
-        }
+        }*/
         $seller = $user->sellers()->create([
-            'profile_picture' => $image,
-            'location' => $request->location,
-            'seller_description' => $request->seller_description,
-            'street_address' => $request->street_address,
-            'unit_number' => $request->unit_number,
-            'city' => $request->city,
-            'state' => $request->state,
-            'zip_code' => $request->zip_code,
-            'birthdate' => $request->birthdate,
-            'about_us' => $request->about_us,
-        ]);*/
-
-        
-        /*$skill = Skill::create([
-            'description' => $request->description,
-            'rate' => $request->rate,
-            'level_of_experience' => $request->level_of_experience,
-            'category' =>$request->category,
-            'seller_id' =>$seller_id,
-            
+            'profile_picture' =>"abc.jpg",
+            'location' => $request->seller[0]['location'],
+            'seller_description' => $request->seller[0]['seller_description'],
+            'street_address' => $request->seller[0]['street_address'],
+            'unit_number' => $request->seller[0]['unit_number'],
+            'city' => $request->seller[0]['city'],
+            'state' => $request->seller[0]['state'],
+            'zip_code' => $request->seller[0]['zip_code'],
+            'birthdate' => $request->seller[0]['birthdate'],
+            'about_us' => $request->seller[0]['about_us'],
         ]);
-          $skill->save();*/
-          $skill = $request->skill[0]->rate;
-         
-        return response()->json(['skill' => $skill], 200);
+       $skills = $request->seller[0]['skill'];
+            for($y=0; $y< count($skills); $y++)
+            {
+                $skill = $seller->skills()->create([
+                'description' => $request->seller[0]['skill'][$y]['description'],
+                'rate' => $request->seller[0]['skill'][$y]['rate'],
+                'level_of_experience' => $request->seller[0]['skill'][$y]['level_of_experience'],
+                'category' =>$request->seller[0]['skill'][$y]['category'],   
+            ]);  
+            }
+        
+        $seller->save(); 
+        return response()->json(['seller' => $seller, 'skill' => $skills], 200);
 
        /* $skillname = $request->skill_name;
         for($x=0; $x< count($skillname); $x++)
         {
             $skill_name = $seller->skills()->create(['skill_name' => $skillname[$x] , ]);
+
+
+        $skillname = $request->skillname;
+        for($x=0; $x< count($skillname); $x++)
+        {
+        	$skill_name = $seller->skills()->create(['skill_name' => $skillname[$x] , ]);
+
         }
         $awardname = $request->award_name;
         for($x=0; $x< count($awardname); $x++)
