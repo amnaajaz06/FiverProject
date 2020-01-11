@@ -7,7 +7,7 @@ use App\Award;
 class Seller extends Model
 {
      protected $fillable = ['profile_picture','location', 'seller_description', 'street_address','unit_number','city','state','zip_code','birthdate','about_us' ];
-     public function skills()
+     public function skill()
 	    {
 	        return $this->hasMany(Skill::class);
 	    }

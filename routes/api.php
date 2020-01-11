@@ -24,4 +24,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/seller/register', 'SellerController@store');
     Route::get('/seller/{id}','SellerController@getseller');
     Route::get('/showseller','SellerController@show');
+    Route::post('/skill', 'SkillController@store');
+    Route::get('/skills','SkillController@show');
+    Route::get('/skill/{id}','SkillController@getskill');
 });

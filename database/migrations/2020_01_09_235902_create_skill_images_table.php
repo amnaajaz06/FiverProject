@@ -15,7 +15,7 @@ class CreateSkillImagesTable extends Migration
     {
         Schema::create('skill_images', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('images')
+            $table->string('images');
             $table->timestamps();
             $table->integer('skill_id')->unsigned()->index();
         });
